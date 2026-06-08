@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicting Student Dropout with Machine Learning — Ammara Kanwal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #F7F4EF;
+    color: #1a1713;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #7a5c3a;
+    border: 1px solid #c4a97a;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0f0d0a;
+    margin-bottom: 20px;
+    letter-spacing: -.01em;
+  }
+
+  .deck {
+    font-size: 19px;
+    font-weight: 300;
+    color: #4a4540;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid #d4c9bb;
+    margin-bottom: 40px;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #c4a97a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .byline-text { font-size: 14px; color: #5a5248; }
+  .byline-text strong { color: #1a1713; font-weight: 400; font-size: 15px; display: block; }
+
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: #c4a97a;
+    margin: 36px 0;
+  }
+
+  p { margin-bottom: 24px; color: #2a2520; }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f0d0a;
+    margin: 40px 0 16px;
+    font-style: italic;
+  }
+
+  .pullquote {
+    border-left: 3px solid #c4a97a;
+    margin: 36px 0;
+    padding: 4px 0 4px 28px;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: #3a2f20;
+    line-height: 1.5;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 36px 0;
+  }
+
+  .stat-box {
+    background: #fff;
+    border: 1px solid #e0d6c8;
+    border-radius: 8px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #7a5c3a;
+    display: block;
+    line-height: 1.1;
+  }
+
+  .stat-desc {
+    font-size: 12px;
+    color: #7a7268;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    display: block;
+  }
+
+  .feature-list {
+    list-style: none;
+    margin: 20px 0 28px;
+    padding: 0;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8e0d5;
+    font-size: 16px;
+    color: #2a2520;
+    margin-bottom: 0;
+  }
+
+  .feature-list li:last-child { border-bottom: none; }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c4a97a;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .closing-box {
+    background: #1a1713;
+    color: #e8e0d5;
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-top: 48px;
+  }
+
+  .closing-box p {
+    color: #c4b49a;
+    font-size: 15px;
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+
+  .closing-box p:last-child { margin-bottom: 0; }
+
+  .closing-box strong { color: #e8e0d5; font-weight: 400; }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #d4c9bb;
+    font-size: 13px;
+    color: #9a9088;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 500px) {
+    .stat-row { grid-template-columns: 1fr; }
+    .page { padding: 40px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="tag">Learning Analytics · Machine Learning · EdTech</div>
+
+  <h1>Can an Algorithm Predict Which Students Will Drop Out — Before It's Too Late?</h1>
+
+  <p class="deck">I trained machine learning models on 32,000 real students from the Open University. Here is what I found — and why it matters for the future of online education.</p>
+
+  <div class="byline">
+    <div class="avatar">AK</div>
+    <div class="byline-text">
+      <strong>Ammara Kanwal</strong>
+      Data Analyst · Learning Analytics Researcher · Karachi, Pakistan
+    </div>
+  </div>
+
+  <p>One in three online students never finishes the course they enrolled in. They log in during the first week, submit an assignment or two — and then quietly disappear. No warning. No goodbye. Just an empty seat in a virtual classroom.</p>
+
+  <p>As a mathematics teacher and someone who has spent years thinking about how students learn, that statistic has always bothered me. Not because the number is surprising — but because so many of those dropouts could have been prevented with the right intervention at the right moment.</p>
+
+  <p>That question became the foundation of my machine learning project using the <strong>OULAD</strong> — the Open University Learning Analytics Dataset — one of the most comprehensive publicly available datasets on student behaviour in online education.</p>
+
+  <div class="divider"></div>
+
+  <h2>What is OULAD?</h2>
+
+  <p>Released by the UK's Open University, OULAD contains anonymized records for approximately 32,000 students across multiple undergraduate modules. It captures not just final results — pass, fail, or withdrawn — but the granular digital footprint students leave behind: every click on a learning resource, every assessment submission, demographic background, and prior academic history.</p>
+
+  <p>What makes OULAD uniquely powerful for research is this combination of <em>behavioural</em> and <em>demographic</em> data. It lets us ask not just "who dropped out?" but "what were they doing in the weeks before they did?"</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="stat-num">32K</span>
+      <span class="stat-desc">Student records</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">87%</span>
+      <span class="stat-desc">Model accuracy</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">2</span>
+      <span class="stat-desc">ML models compared</span>
+    </div>
+  </div>
+
+  <h2>What I did</h2>
+
+  <p>I built and compared two machine learning models — Logistic Regression and Random Forest — to predict whether a student would withdraw before completing their module. The target variable was binary: withdrawn versus not withdrawn (pass or fail both counted as "completed").</p>
+
+  <p>Rather than using end-of-course data, I focused on features available <em>early in the module</em> — the kind of signals a real institution could act on in time to make a difference. The two most predictive feature categories were:</p>
+
+  <ul class="feature-list">
+    <li><span class="dot"></span><span><strong>VLE interactions</strong> — the total number of clicks and interactions with Virtual Learning Environment resources (lecture notes, forums, quizzes) in the early weeks of the course.</span></li>
+    <li><span class="dot"></span><span><strong>Assessment scores</strong> — performance on early continuous assessments (TMA scores), which proved to be among the strongest signals of eventual withdrawal.</span></li>
+  </ul>
+
+  <h2>What I found</h2>
+
+  <p>The Random Forest model achieved up to <strong>87% accuracy</strong> in identifying students at risk of withdrawal — significantly outperforming the Logistic Regression baseline. But the number that stayed with me was not the overall accuracy. It was what the feature importance analysis revealed:</p>
+
+  <div class="pullquote">
+    Students who engaged less with course materials in the first two weeks were dramatically more likely to withdraw — regardless of their prior qualifications.
+  </div>
+
+  <p>Low early VLE engagement was a stronger predictor of dropout than age, disability status, or even previous academic results. This challenges the common assumption that at-risk students are primarily identified by who they <em>are</em> — their background, their demographics. The data suggests we should be watching what they <em>do</em> in the first fortnight.</p>
+
+  <h2>Why it matters</h2>
+
+  <p>Online education has democratized access to learning in ways that were unimaginable twenty years ago. But access without completion is a hollow promise. Every student who withdraws represents not just a lost tuition fee, but a lost opportunity — for them, and for the institution that could have done more.</p>
+
+  <p>A model like this, embedded in a real LMS (Learning Management System), could automatically flag students showing early disengagement patterns. A tutor could receive a prompt: <em>"Three students in your cohort have had fewer than 5 interactions this week — would you like to send them a message?"</em> Simple. Human-led. Data-informed.</p>
+
+  <h2>What comes next</h2>
+
+  <p>This project is a starting point, not a conclusion. In future work I want to explore time-series modelling — treating each week as a data point rather than aggregating — and test whether intervention simulations built on this data can demonstrate real retention improvements.</p>
+
+  <p>My longer-term goal is to pursue a PhD in Educational Technology, specifically focused on using learning analytics to build fairer, more responsive educational systems. OULAD has given me a proof of concept. The real work is in turning that proof into practice.</p>
+
+  <div class="closing-box">
+    <p><strong>About the author:</strong> Ammara Kanwal is an aspiring Data Analyst and Learning Analytics researcher based in Karachi, Pakistan, with a background in mathematics education and software development.</p>
+    <p>She is currently seeking remote opportunities in Data Analytics, Business Intelligence, and EdTech, and is exploring PhD programmes in Educational Technology.</p>
+    <p>Connect on LinkedIn · View project on GitHub</p>
+  </div>
+
+  <footer>
+    <span>Ammara Kanwal · 2025</span>
+    <span>Tags: Learning Analytics · EdTech · Machine Learning · Python · OULAD</span>
+  </footer>
+
+</div>
+</body>
+</html>
